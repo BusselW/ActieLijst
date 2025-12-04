@@ -21,7 +21,26 @@ document.addEventListener("DOMContentLoaded", function() {
     // Initialiseer Quill editor
     quillUitleg = new Quill('#quillUitleg', {
         modules: {
-            toolbar: '#quillToolbar'
+            toolbar: '#quillToolbar',
+            keyboard: {
+                bindings: {
+                    // Enter voor line break, Shift+Enter voor nieuwe paragraaf
+                    linebreak: {
+                        key: 13,
+                        handler: function(range, context) {
+                            if (context.event.shiftKey) {
+                                // Shift+Enter: nieuwe paragraaf (default behavior)
+                                return true;
+                            } else {
+                                // Enter: single line break
+                                this.quill.insertText(range.index, '\n');
+                                this.quill.setSelection(range.index + 1);
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
         },
         theme: 'snow'
     });

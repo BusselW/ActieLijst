@@ -22,6 +22,9 @@
 
     <!-- Onze scripts -->
     <script src="https://som.org.om.local/sites/MulderT/Onderdelen/ZVAppel/ZV/CPW/Lijst/scripts.js"></script>
+    
+    <!-- Tour guide -->
+    <script src="https://som.org.om.local/sites/MulderT/Onderdelen/ZVAppel/ZV/CPW/Lijst/tour.js"></script>
 </head>
 <body>
     <h1>
