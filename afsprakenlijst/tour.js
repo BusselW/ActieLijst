@@ -86,12 +86,11 @@ function initTour() {
     helpButton.addEventListener('click', startTour);
     document.body.appendChild(helpButton);
 
-    // Check if user has seen the tour before
-    const hasSeenTour = localStorage.getItem('afsprakenlijst_tour_completed');
-    if (!hasSeenTour) {
-        // Auto-start tour for first-time users after a short delay
-        setTimeout(() => startTour(), 500);
-    }
+    // Don't auto-start the tour - let users click the button
+    // const hasSeenTour = localStorage.getItem('afsprakenlijst_tour_completed');
+    // if (!hasSeenTour) {
+    //     setTimeout(() => startTour(), 500);
+    // }
 }
 
 /************************************************
