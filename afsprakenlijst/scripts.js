@@ -69,6 +69,14 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("deleteButton").classList.add("enabled");
     });
 
+    // 3b) Dubbelklik op rij => direct bewerken
+    tableBody.addEventListener("dblclick", (evt) => {
+        const row = evt.target.closest("tr");
+        if (!row || row.id === "loading-row") return;
+        selectedRowId = row.dataset.id;
+        openEditModal();
+    });
+
     // 4) Toevoegen
     document.getElementById("addButton").addEventListener("click", () => {
         document.getElementById("editId").value = "";
@@ -97,6 +105,42 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 8) Opslaan-knop
     document.getElementById("saveItemButton").addEventListener("click", () => saveItem());
+
+    // 9) Toetsenbord sneltoetsen
+    document.addEventListener("keydown", (e) => {
+        // ESC om modals te sluiten
+        if (e.key === "Escape") {
+            closeModal("editModal");
+            closeModal("deleteModal");
+        }
+        
+        // Als er geen modal open is en een rij geselecteerd is
+        const editModalOpen = document.getElementById("editModal").style.display === "flex";
+        const deleteModalOpen = document.getElementById("deleteModal").style.display === "flex";
+        
+        if (!editModalOpen && !deleteModalOpen && selectedRowId) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                openEditModal();
+            } else if (e.key === "Delete") {
+                e.preventDefault();
+                document.getElementById("deleteId").value = selectedRowId;
+                openModal("deleteModal");
+            }
+        }
+    });
+
+    // 10) Klik buiten modal om te sluiten
+    document.getElementById("editModal").addEventListener("click", (e) => {
+        if (e.target.id === "editModal") {
+            closeModal("editModal");
+        }
+    });
+    document.getElementById("deleteModal").addEventListener("click", (e) => {
+        if (e.target.id === "deleteModal") {
+            closeModal("deleteModal");
+        }
+    });
 
     // Data inladen
     loadData();
@@ -139,12 +183,23 @@ function renderTable(data) {
         const tr = document.createElement("tr");
         tr.dataset.id = item.ID;
 
-        tr.innerHTML = `
-            <td>${escapeHTML(item.Title) || ""}</td>
-            <td>${escapeHTML(item.Categorie) || "Algemeen"}</td>
-            <td>${sanitizeHTML(item.Uitleg) || ""}</td>
-            <td>${formatDateTime(item.Created)}</td>
-        `;
+        const titleCell = document.createElement("td");
+        titleCell.textContent = item.Title || "";
+        
+        const categorieCell = document.createElement("td");
+        categorieCell.textContent = item.Categorie || "Algemeen";
+        
+        const uitlegCell = document.createElement("td");
+        uitlegCell.innerHTML = sanitizeAndFormatHTML(item.Uitleg || "");
+        
+        const createdCell = document.createElement("td");
+        createdCell.textContent = formatDateTime(item.Created);
+        
+        tr.appendChild(titleCell);
+        tr.appendChild(categorieCell);
+        tr.appendChild(uitlegCell);
+        tr.appendChild(createdCell);
+        
         tableBody.appendChild(tr);
     });
 }
@@ -213,6 +268,7 @@ function openAddModal() {
     quillUitleg.setContents([]);
 
     openModal("editModal");
+    setTimeout(() => document.getElementById("editTitle").focus(), 100);
 }
 
 /************************************************
@@ -237,6 +293,7 @@ async function openEditModal() {
     quillUitleg.clipboard.dangerouslyPasteHTML(sanitizedUitlegHtml);
 
     openModal("editModal");
+    setTimeout(() => document.getElementById("editTitle").focus(), 100);
 }
 
 /************************************************
@@ -373,7 +430,7 @@ function showNotification(message, type) {
 }
 
 /************************************************
- * Sanitize HTML voor tabel weergave
+ * Sanitize HTML voor editor (removes external classes)
  ************************************************/
 function sanitizeHTML(html) {
     if (!html) return "";
@@ -384,6 +441,51 @@ function sanitizeHTML(html) {
     externalDivs.forEach(div => {
         div.replaceWith(...div.childNodes);
     });
+    return tempDiv.innerHTML;
+}
+
+/************************************************
+ * Sanitize and format HTML voor tabel weergave
+ * Renders HTML properly (bold, italic, etc.) and handles line breaks
+ ************************************************/
+function sanitizeAndFormatHTML(html) {
+    if (!html) return "";
+    
+    // Eerst VbCrLf en andere line breaks converteren naar <br>
+    let formatted = html
+        .replace(/\r\n/g, '<br>')
+        .replace(/\n/g, '<br>')
+        .replace(/\r/g, '<br>');
+    
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = formatted;
+    
+    // Verwijder alle 'ExternalClass...' divs maar behoud content
+    const externalDivs = tempDiv.querySelectorAll('div[class^="ExternalClass"]');
+    externalDivs.forEach(div => {
+        div.replaceWith(...div.childNodes);
+    });
+    
+    // Verwijder potentieel gevaarlijke tags maar behoud formatting tags
+    const allowedTags = ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 's', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'a', 'span'];
+    const allElements = tempDiv.querySelectorAll('*');
+    allElements.forEach(el => {
+        if (!allowedTags.includes(el.tagName.toLowerCase())) {
+            // Vervang niet-toegestane tags met hun content
+            el.replaceWith(...el.childNodes);
+        }
+    });
+    
+    // Verwijder script tags en event handlers
+    tempDiv.querySelectorAll('script').forEach(el => el.remove());
+    tempDiv.querySelectorAll('*').forEach(el => {
+        Array.from(el.attributes).forEach(attr => {
+            if (attr.name.startsWith('on')) {
+                el.removeAttribute(attr.name);
+            }
+        });
+    });
+    
     return tempDiv.innerHTML;
 }
 
