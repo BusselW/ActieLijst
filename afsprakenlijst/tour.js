@@ -291,8 +291,8 @@ document.addEventListener('keydown', (e) => {
 /************************************************
  * Initialize tour when DOM is ready
  ************************************************/
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initTour);
-} else {
-    initTour();
-}
+// Wait for the main scripts.js to load first
+window.addEventListener('load', () => {
+    // Small delay to ensure all scripts are initialized
+    setTimeout(initTour, 100);
+});
