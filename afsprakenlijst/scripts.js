@@ -19,14 +19,6 @@ let lastUsedCategory = localStorage.getItem('lastUsedCategory') || 'Algemeen';
 const LIST_GUID = '8d274240-f1a0-4018-a1f8-741c95a63041';
 const SITE_URL = 'https://som.org.om.local/sites/MulderT/Onderdelen/ZVAppel/Appel';
 
-// Quick text templates
-const QUICK_TEMPLATES = {
-    'vergadering': 'Vergadering gepland op [datum] om [tijd]\n\nAgenda:\n- Punt 1\n- Punt 2\n\nLocatie: [locatie]',
-    'deadline': 'Deadline: [datum]\n\nOmschrijving:\n[beschrijving]\n\nVerantwoordelijke: [naam]',
-    'actie': 'Actie: [actie beschrijving]\n\nVerantwoordelijke: [naam]\nDeadline: [datum]\nStatus: In behandeling',
-    'opvolging': 'Opvolging vereist voor: [onderwerp]\n\nVorige acties:\n- [actie 1]\n\nVolgende stappen:\n- [stap 1]'
-};
-
 /************************************************
  * Init zodra de DOM geladen is
  ************************************************/
