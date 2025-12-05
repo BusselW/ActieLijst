@@ -5,6 +5,9 @@
     <title>Afsprakenlijst Appel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%232874A6'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-family='Arial, sans-serif' font-weight='bold'%3EA%3C/text%3E%3C/svg%3E">
+
     <!-- Quill CSS -->
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
         
@@ -33,14 +36,17 @@
            target="_blank"
            title="Open lijst in een nieuwe pagina"
            style="margin-left: 10px;">
-            <img src="https://som.org.om.local/sites/MulderT/SBeheer/CPW/Iconen/CustomLijsten/OpenLink.png"
-                 alt="Open link"
-                 style="width: 20px; height: 20px; vertical-align: middle;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" stroke="#2874A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M15 3h6v6" stroke="#2874A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M10 14L21 3" stroke="#2874A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
         </a>
-        <img src="https://som.org.om.local/sites/MulderT/SBeheer/CPW/Iconen/Algemeen/help.png"
-             alt="Help"
-             class="help-icon"
-             data-tooltip="Deze lijst toont alle afspraken van het appel.">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="help-icon" data-tooltip="Deze lijst toont alle afspraken van het appel." style="cursor: pointer; margin-left: 10px;">
+            <circle cx="12" cy="12" r="10" stroke="#2874A6" stroke-width="2" fill="none"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" stroke="#2874A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="17" r="0.5" fill="#2874A6" stroke="#2874A6" stroke-width="1.5"/>
+        </svg>
     </h1>
     <div class="tooltip" id="tooltip-info"></div>
 

@@ -204,9 +204,11 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("cancelButton").addEventListener("click", () => {
         if (formHasChanges) {
             if (confirm("Je hebt niet-opgeslagen wijzigingen. Weet je zeker dat je wilt annuleren?")) {
+                clearDraft();
                 closeModal("editModal");
             }
         } else {
+            clearDraft();
             closeModal("editModal");
         }
     });
