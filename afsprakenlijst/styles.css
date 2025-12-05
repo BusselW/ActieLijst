@@ -128,6 +128,11 @@ h1 {
     color: #154360; /* Dark blue text for better contrast/integration */
 }
 
+/* Fix for "marked" text: Force transparent background on all child elements in cells */
+.styled-table td * {
+    background-color: transparent !important;
+}
+
 .styled-table tbody tr.selected td {
     border-bottom-color: #85C1E9;
 }
