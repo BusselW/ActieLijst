@@ -108,18 +108,6 @@
                 <option value="Juridisch">Juridisch</option>
             </select>
 
-            <!-- Quick Templates -->
-            <div class="template-section">
-                <label for="quickTemplate">Snelle tekst invoegen</label>
-                <select id="quickTemplate">
-                    <option value="">-- Selecteer sjabloon --</option>
-                    <option value="vergadering">Vergadering afspraak</option>
-                    <option value="deadline">Deadline</option>
-                    <option value="actie">Actie punt</option>
-                    <option value="opvolging">Opvolging vereist</option>
-                </select>
-            </div>
-
             <!-- Quill: Uitleg -->
             <div class="editor-controls">
                 <label for="quillUitleg">Uitleg</label>

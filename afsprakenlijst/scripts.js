@@ -211,38 +211,45 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // 15) Quick template selector
-    document.getElementById("quickTemplate").addEventListener("change", (e) => {
-        const template = e.target.value;
-        if (template && QUICK_TEMPLATES[template]) {
-            quillUitleg.setText(QUICK_TEMPLATES[template]);
-            e.target.value = ""; // Reset selector
-            trackFormChanges();
-        }
-    });
+    // 15) Preview toggle
+    const togglePreviewBtn = document.getElementById("togglePreview");
+    if (togglePreviewBtn) {
+        togglePreviewBtn.addEventListener("click", togglePreview);
+    }
 
-    // 16) Preview toggle
-    document.getElementById("togglePreview").addEventListener("click", togglePreview);
+    // 16) Clear formatting
+    const clearFormattingBtn = document.getElementById("clearFormatting");
+    if (clearFormattingBtn) {
+        clearFormattingBtn.addEventListener("click", () => {
+            const selection = quillUitleg.getSelection();
+            if (selection && selection.length > 0) {
+                quillUitleg.removeFormat(selection.index, selection.length);
+                showNotification("Opmaak verwijderd", "success");
+            } else {
+                showNotification("Selecteer eerst tekst om opmaak te verwijderen", "error");
+            }
+        });
+    }
 
-    // 17) Clear formatting
-    document.getElementById("clearFormatting").addEventListener("click", () => {
-        const selection = quillUitleg.getSelection();
-        if (selection) {
-            quillUitleg.removeFormat(selection.index, selection.length);
-        }
-    });
+    // 17) Strip paste formatting (plain text paste)
+    const stripPasteBtn = document.getElementById("stripPasteFormatting");
+    if (stripPasteBtn) {
+        stripPasteBtn.addEventListener("click", async () => {
+            try {
+                const text = await navigator.clipboard.readText();
+                const selection = quillUitleg.getSelection() || { index: 0 };
+                quillUitleg.insertText(selection.index, text);
+                showNotification("Tekst geplakt zonder opmaak", "success");
+            } catch (err) {
+                showNotification("Kon niet plakken. Gebruik Ctrl+V.", "error");
+            }
+        });
+    }
 
-    // 18) Strip paste formatting (plain text paste)
-    document.getElementById("stripPasteFormatting").addEventListener("click", async () => {
-        try {
-            const text = await navigator.clipboard.readText();
-            const selection = quillUitleg.getSelection() || { index: 0 };
-            quillUitleg.insertText(selection.index, text);
-            showNotification("Tekst geplakt zonder opmaak", "success");
-        } catch (err) {
-            showNotification("Kon niet plakken. Gebruik Ctrl+V.", "error");
-        }
-    });
+    // 18) Editor resize handle
+    initEditorResize();
+        });
+    }
 
     // 19) Editor resize handle
     initEditorResize();
