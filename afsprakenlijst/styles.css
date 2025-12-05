@@ -158,6 +158,14 @@ h1 {
 
 .modal-content-large {
     max-width: 900px;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-content-large #quillUitleg {
+    flex: 1;
+    min-height: 400px;
 }
 
 @keyframes slideIn {
@@ -564,9 +572,18 @@ h1 {
     border-color: #2874A6;
 }
 
-.btn-icon span {
-    display: inline-block;
-    pointer-events: none; /* Ensure click hits button */
+.btn-icon svg {
+    pointer-events: none;
+    stroke: #555;
+    transition: stroke 0.2s;
+}
+
+.btn-icon:hover svg {
+    stroke: #333;
+}
+
+.btn-icon.active svg {
+    stroke: white;
 }
 
 /* Unsaved changes indicator */

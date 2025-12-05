@@ -119,13 +119,24 @@
                 <label for="quillUitleg">Uitleg</label>
                 <div class="editor-buttons">
                     <button type="button" class="btn-icon" id="togglePreview" title="Voorbeeld weergave">
-                        <span>👁️</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
                     </button>
                     <button type="button" class="btn-icon" id="clearFormatting" title="Opmaak verwijderen">
-                        <span>🧹</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 20H7L3 16C2 15 2 13 3 12L13 2L22 11L20 20Z"></path>
+                            <line x1="11" y1="11" x2="20" y2="20"></line>
+                        </svg>
                     </button>
                     <button type="button" class="btn-icon" id="stripPasteFormatting" title="Plakken zonder opmaak">
-                        <span>📋</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            <path d="M10 12h4"></path>
+                            <path d="M10 16h4"></path>
+                        </svg>
                     </button>
                 </div>
             </div>
@@ -145,7 +156,7 @@
                 <button class="ql-link"></button>
                 <button class="ql-clean"></button>
             </div>
-            <div id="quillUitleg" class="quill-editor-resizable" style="height: 250px;"></div>
+            <div id="quillUitleg" class="quill-editor-resizable" style="height: 500px;"></div>
             <div class="resize-handle" id="editorResizeHandle"></div>
             
             <!-- Preview area -->
