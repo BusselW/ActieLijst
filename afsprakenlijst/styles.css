@@ -125,6 +125,16 @@ h1 {
 }
 .styled-table tbody tr.selected {
     background-color: #AED6F1;
+    color: #154360; /* Dark blue text for better contrast/integration */
+}
+
+.styled-table tbody tr.selected td {
+    border-bottom-color: #85C1E9;
+}
+
+/* Ensure ID column (which has inline grey style) adapts when selected */
+.styled-table tbody tr.selected td:first-child {
+    color: #154360 !important;
 }
 
 /* Modals */
