@@ -23,10 +23,10 @@ const TOUR_STEPS = [
         position: 'bottom'
     },
     {
-        target: '.styled-table tbody',
+        target: '.styled-table thead',
         title: 'Afspraken selecteren',
         content: 'Klik op een rij om deze te selecteren. Dubbelklik om direct te bewerken. Gebruik Enter of Delete toetsen voor snelle acties.',
-        position: 'top',
+        position: 'bottom',
         highlight: true
     },
     {

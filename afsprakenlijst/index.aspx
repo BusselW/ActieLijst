@@ -88,14 +88,18 @@
 
     <!-- Toevoegen/Bewerken Modal -->
     <div class="modal" id="editModal">
-        <div class="modal-content">
+        <div class="modal-content modal-content-large">
             <h2 id="modalTitle">Nieuwe afspraak</h2>
             <!-- Verborgen input om te zien of we iets aan het bewerken zijn -->
             <input type="hidden" id="editId">
 
             <!-- Titel -->
-            <label for="editTitle">Titel *</label>
-            <input type="text" id="editTitle" required>
+            <label for="editTitle">
+                Titel <span class="required-asterisk">*</span>
+                <span class="char-counter" id="titleCharCounter">0/100</span>
+            </label>
+            <input type="text" id="editTitle" required maxlength="100">
+            <div class="validation-message" id="titleValidation"></div>
 
             <!-- Categorie (keuze) -->
             <label for="editCategorie">Categorie</label>
@@ -104,8 +108,33 @@
                 <option value="Juridisch">Juridisch</option>
             </select>
 
+            <!-- Quick Templates -->
+            <div class="template-section">
+                <label for="quickTemplate">Snelle tekst invoegen</label>
+                <select id="quickTemplate">
+                    <option value="">-- Selecteer sjabloon --</option>
+                    <option value="vergadering">Vergadering afspraak</option>
+                    <option value="deadline">Deadline</option>
+                    <option value="actie">Actie punt</option>
+                    <option value="opvolging">Opvolging vereist</option>
+                </select>
+            </div>
+
             <!-- Quill: Uitleg -->
-            <label for="quillUitleg">Uitleg</label>
+            <div class="editor-controls">
+                <label for="quillUitleg">Uitleg</label>
+                <div class="editor-buttons">
+                    <button type="button" class="btn-icon" id="togglePreview" title="Voorbeeld weergave">
+                        <span>👁️</span>
+                    </button>
+                    <button type="button" class="btn-icon" id="clearFormatting" title="Opmaak verwijderen">
+                        <span>🧹</span>
+                    </button>
+                    <button type="button" class="btn-icon" id="stripPasteFormatting" title="Plakken zonder opmaak">
+                        <span>📋</span>
+                    </button>
+                </div>
+            </div>
             <div id="quillToolbar" class="quill-toolbar">
                 <button class="ql-bold"></button>
                 <button class="ql-italic"></button>
@@ -122,11 +151,23 @@
                 <button class="ql-link"></button>
                 <button class="ql-clean"></button>
             </div>
-            <div id="quillUitleg" style="height: 200px;"></div>
+            <div id="quillUitleg" class="quill-editor-resizable" style="height: 250px;"></div>
+            <div class="resize-handle" id="editorResizeHandle"></div>
+            
+            <!-- Preview area -->
+            <div id="previewArea" class="preview-area" style="display:none;">
+                <h4>Voorbeeld:</h4>
+                <div id="previewContent" class="preview-content"></div>
+            </div>
 
-            <div style="display:flex; justify-content:flex-end; gap:1rem; margin-top:1rem;">
-                <button type="button" class="action-button" id="saveItemButton">Opslaan</button>
-                <button type="button" class="action-button" onclick="closeModal('editModal')">Annuleren</button>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-top:1rem;">
+                <div class="unsaved-indicator" id="unsavedIndicator" style="display:none;">
+                    <span class="unsaved-dot">●</span> Niet opgeslagen wijzigingen
+                </div>
+                <div style="display:flex; gap:1rem; margin-left:auto;">
+                    <button type="button" class="action-button" id="saveItemButton">Opslaan</button>
+                    <button type="button" class="action-button" id="cancelButton">Annuleren</button>
+                </div>
             </div>
         </div>
     </div>
