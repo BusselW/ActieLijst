@@ -78,15 +78,17 @@
         <table class="styled-table">
             <thead>
                 <tr>
+                    <th data-sort="ID" class="sortable" style="width: 50px;">ID</th>
                     <th data-sort="Title" class="sortable">Titel</th>
                     <th data-sort="Categorie" class="sortable">Categorie</th>
                     <th data-sort="Uitleg" class="sortable">Uitleg</th>
+                    <th style="width: 50px;">📎</th>
                     <th data-sort="Created" class="sortable">Aangemaakt</th>
                 </tr>
             </thead>
             <tbody id="table-body">
                 <tr id="loading-row" data-state="loading">
-                    <td colspan="4">Gegevens laden...</td>
+                    <td colspan="6">Gegevens laden...</td>
                 </tr>
             </tbody>
         </table>

@@ -413,7 +413,7 @@ async function loadData() {
 
 async function fetchItemsFromList() {
     const url = `${SITE_URL}/_api/web/lists(guid'${LIST_GUID}')/items?` +
-      "$select=ID,Title,Categorie,Uitleg,Created&$orderby=Created desc";
+      "$select=ID,Title,Categorie,Uitleg,Created,Attachments,AttachmentFiles&$expand=AttachmentFiles&$orderby=Created desc";
 
     const resp = await apiCallWithDigest(url, { method: "GET" });
     const data = await resp.json();
@@ -425,32 +425,126 @@ function renderTable(data) {
     const tableBody = document.getElementById("table-body");
     tableBody.innerHTML = "";
     if (!data || data.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="4">Geen gegevens gevonden</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="6">Geen gegevens gevonden</td></tr>`;
         return;
     }
     data.forEach(item => {
         const tr = document.createElement("tr");
         tr.dataset.id = item.ID;
 
+        // 1. ID Column
+        const idCell = document.createElement("td");
+        idCell.textContent = item.ID;
+        idCell.style.color = "#888";
+        idCell.style.fontSize = "12px";
+
+        // 2. Title Column
         const titleCell = document.createElement("td");
         titleCell.textContent = item.Title || "";
         
+        // 3. Category Column
         const categorieCell = document.createElement("td");
         categorieCell.textContent = item.Categorie || "Algemeen";
         
+        // 4. Uitleg Column
         const uitlegCell = document.createElement("td");
         uitlegCell.innerHTML = sanitizeAndFormatHTML(item.Uitleg || "");
-        
+
+        // 5. Attachments Column
+        const attachCell = document.createElement("td");
+        if (item.AttachmentFiles && item.AttachmentFiles.results && item.AttachmentFiles.results.length > 0) {
+            const count = item.AttachmentFiles.results.length;
+            const firstFile = item.AttachmentFiles.results[0];
+            
+            // Create a container for the icon
+            const iconContainer = document.createElement("div");
+            iconContainer.className = "attachment-icon-container";
+            iconContainer.style.cursor = "pointer";
+            iconContainer.style.position = "relative";
+            iconContainer.title = `${count} bijlage(n). Klik om te downloaden.`;
+            
+            iconContainer.innerHTML = `
+                <span style="font-size:16px;">📎</span>
+                ${count > 1 ? `<span style="font-size:10px; vertical-align:top; font-weight:bold;">${count}</span>` : ''}
+            `;
+
+            // Click handler to download first file or show list
+            iconContainer.addEventListener("click", (e) => {
+                e.stopPropagation(); // Prevent row selection/edit
+                
+                if (count === 1) {
+                    // Direct download if only 1
+                    window.open(firstFile.ServerRelativeUrl, '_blank');
+                } else {
+                    // Show simple dropdown/popover for multiple
+                    showAttachmentPopover(e, item.AttachmentFiles.results);
+                }
+            });
+
+            attachCell.appendChild(iconContainer);
+        }
+
+        // 6. Created Column
         const createdCell = document.createElement("td");
         createdCell.textContent = formatDateTime(item.Created);
         
+        tr.appendChild(idCell);
         tr.appendChild(titleCell);
         tr.appendChild(categorieCell);
         tr.appendChild(uitlegCell);
+        tr.appendChild(attachCell);
         tr.appendChild(createdCell);
         
         tableBody.appendChild(tr);
     });
+}
+
+// Helper to show attachment popover
+function showAttachmentPopover(event, files) {
+    // Remove existing popovers
+    const existing = document.querySelectorAll('.attachment-popover');
+    existing.forEach(el => el.remove());
+
+    const popover = document.createElement("div");
+    popover.className = "attachment-popover";
+    popover.style.position = "absolute";
+    popover.style.background = "white";
+    popover.style.border = "1px solid #ccc";
+    popover.style.boxShadow = "0 2px 10px rgba(0,0,0,0.2)";
+    popover.style.padding = "10px";
+    popover.style.zIndex = "10000";
+    popover.style.borderRadius = "4px";
+    popover.style.minWidth = "200px";
+
+    const ul = document.createElement("ul");
+    ul.style.listStyle = "none";
+    ul.style.padding = "0";
+    ul.style.margin = "0";
+
+    files.forEach(file => {
+        const li = document.createElement("li");
+        li.style.marginBottom = "5px";
+        li.innerHTML = `<a href="${file.ServerRelativeUrl}" target="_blank" download style="text-decoration:none; color:#2874A6;">📄 ${file.FileName}</a>`;
+        ul.appendChild(li);
+    });
+
+    popover.appendChild(ul);
+    document.body.appendChild(popover);
+
+    // Position popover
+    const rect = event.target.getBoundingClientRect();
+    popover.style.left = (rect.left + window.scrollX) + "px";
+    popover.style.top = (rect.bottom + window.scrollY + 5) + "px";
+
+    // Close on click outside
+    setTimeout(() => {
+        document.addEventListener("click", function closePopover(e) {
+            if (!popover.contains(e.target)) {
+                popover.remove();
+                document.removeEventListener("click", closePopover);
+            }
+        });
+    }, 0);
 }
 
 /************************************************
