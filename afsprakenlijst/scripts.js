@@ -219,13 +219,19 @@ document.addEventListener("DOMContentLoaded", function() {
     // 15) Preview toggle
     const togglePreviewBtn = document.getElementById("togglePreview");
     if (togglePreviewBtn) {
-        togglePreviewBtn.addEventListener("click", togglePreview);
+        togglePreviewBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            togglePreview();
+        });
     }
 
     // 16) Clear formatting
     const clearFormattingBtn = document.getElementById("clearFormatting");
     if (clearFormattingBtn) {
-        clearFormattingBtn.addEventListener("click", () => {
+        clearFormattingBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             const selection = quillUitleg.getSelection();
             if (selection && selection.length > 0) {
                 quillUitleg.removeFormat(selection.index, selection.length);
@@ -239,7 +245,9 @@ document.addEventListener("DOMContentLoaded", function() {
     // 17) Strip paste formatting (plain text paste)
     const stripPasteBtn = document.getElementById("stripPasteFormatting");
     if (stripPasteBtn) {
-        stripPasteBtn.addEventListener("click", async () => {
+        stripPasteBtn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             try {
                 const text = await navigator.clipboard.readText();
                 const selection = quillUitleg.getSelection() || { index: 0 };
@@ -253,11 +261,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 18) Editor resize handle
     initEditorResize();
-        });
-    }
 
-    // 19) Editor resize handle
-    initEditorResize();
+    // Data inladen
+    loadData();
+});
 
     // Data inladen
     loadData();
