@@ -28,6 +28,9 @@ document.addEventListener("DOMContentLoaded", function() {
     quillUitleg = new Quill('#quillUitleg', {
         modules: {
             toolbar: '#quillToolbar',
+            clipboard: {
+                matchVisual: false
+            },
             keyboard: {
                 bindings: {
                     // Enter voor line break, Shift+Enter voor nieuwe paragraaf
@@ -230,19 +233,41 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // 17) Strip paste formatting (plain text paste)
-    const stripPasteBtn = document.getElementById("stripPasteFormatting");
-    if (stripPasteBtn) {
-        stripPasteBtn.addEventListener("click", async (e) => {
+    // 17) Smart Paste (tries to keep formatting)
+    const pasteBtn = document.getElementById("smartPaste");
+    if (pasteBtn) {
+        pasteBtn.addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
             try {
-                const text = await navigator.clipboard.readText();
-                const selection = quillUitleg.getSelection() || { index: 0 };
-                quillUitleg.insertText(selection.index, text);
-                showNotification("Tekst geplakt zonder opmaak", "success");
+                // Try to read HTML from clipboard
+                const clipboardItems = await navigator.clipboard.read();
+                let pasted = false;
+                for (const item of clipboardItems) {
+                    if (item.types.includes('text/html')) {
+                        const blob = await item.getType('text/html');
+                        const html = await blob.text();
+                        const selection = quillUitleg.getSelection() || { index: 0 };
+                        quillUitleg.clipboard.dangerouslyPasteHTML(selection.index, html);
+                        pasted = true;
+                        break;
+                    }
+                }
+                
+                if (!pasted) {
+                    throw new Error("No HTML found");
+                }
+                showNotification("Tekst geplakt met opmaak", "success");
             } catch (err) {
-                showNotification("Kon niet plakken. Gebruik Ctrl+V.", "error");
+                // Fallback to plain text
+                try {
+                    const text = await navigator.clipboard.readText();
+                    const selection = quillUitleg.getSelection() || { index: 0 };
+                    quillUitleg.insertText(selection.index, text);
+                    showNotification("Tekst geplakt (alleen tekst beschikbaar)", "success");
+                } catch (err2) {
+                    showNotification("Kon niet plakken. Gebruik Ctrl+V.", "error");
+                }
             }
         });
     }
