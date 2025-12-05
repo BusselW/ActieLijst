@@ -679,7 +679,7 @@ h1 {
     max-width: 300px;
     line-height: 1.8;
     white-space: pre-wrap;
-    z-index: 1000;
+    z-index: 10002; /* Higher than modal (9999) and notification (10001) */
 }
 
 /* Tour Guide Styles */
