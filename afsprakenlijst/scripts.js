@@ -326,17 +326,21 @@ async function loadAttachments(itemId) {
             const li = document.createElement("li");
             li.className = "attachment-item";
             
-            // File icon based on extension (simple version)
+            // File icon based on extension (SVG)
             const ext = att.FileName.split('.').pop().toLowerCase();
-            let icon = "📄";
-            if (['jpg','jpeg','png','gif'].includes(ext)) icon = "🖼️";
-            if (['pdf'].includes(ext)) icon = "📕";
-            if (['doc','docx'].includes(ext)) icon = "📘";
-            if (['xls','xlsx'].includes(ext)) icon = "📗";
+            let iconSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>`; // Default file
+            
+            if (['jpg','jpeg','png','gif'].includes(ext)) {
+                // Image icon
+                iconSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2874A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>`;
+            } else if (['pdf'].includes(ext)) {
+                // PDF icon (red)
+                iconSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E74C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`;
+            }
 
             li.innerHTML = `
                 <a href="${att.ServerRelativeUrl}" target="_blank" class="attachment-link" download>
-                    <span style="font-size:18px;">${icon}</span>
+                    ${iconSvg}
                     <span>${att.FileName}</span>
                 </a>
                 <button type="button" class="delete-attachment" title="Verwijderen" onclick="deleteAttachment(${itemId}, '${att.FileName}')">
@@ -464,8 +468,10 @@ function renderTable(data) {
             iconContainer.title = `${count} bijlage(n). Klik om te downloaden.`;
             
             iconContainer.innerHTML = `
-                <span style="font-size:16px;">📎</span>
-                ${count > 1 ? `<span style="font-size:10px; vertical-align:top; font-weight:bold;">${count}</span>` : ''}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                </svg>
+                ${count > 1 ? `<span style="font-size:10px; vertical-align:top; font-weight:bold; color:#2874A6;">${count}</span>` : ''}
             `;
 
             // Click handler to download first file or show list
@@ -524,7 +530,23 @@ function showAttachmentPopover(event, files) {
     files.forEach(file => {
         const li = document.createElement("li");
         li.style.marginBottom = "5px";
-        li.innerHTML = `<a href="${file.ServerRelativeUrl}" target="_blank" download style="text-decoration:none; color:#2874A6;">📄 ${file.FileName}</a>`;
+        li.style.display = "flex";
+        li.style.alignItems = "center";
+        li.style.gap = "6px";
+        
+        const ext = file.FileName.split('.').pop().toLowerCase();
+        let iconSvg = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>`;
+        
+        if (['jpg','jpeg','png','gif'].includes(ext)) {
+            iconSvg = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2874A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>`;
+        } else if (['pdf'].includes(ext)) {
+            iconSvg = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E74C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`;
+        }
+
+        li.innerHTML = `
+            ${iconSvg}
+            <a href="${file.ServerRelativeUrl}" target="_blank" download style="text-decoration:none; color:#2874A6;">${file.FileName}</a>
+        `;
         ul.appendChild(li);
     });
 
