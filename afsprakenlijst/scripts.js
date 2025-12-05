@@ -258,10 +258,6 @@ document.addEventListener("DOMContentLoaded", function() {
     loadData();
 });
 
-    // Data inladen
-    loadData();
-});
-
 /************************************************
  * Data ophalen en tabel renderen
  ************************************************/
