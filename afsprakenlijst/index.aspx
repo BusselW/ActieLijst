@@ -42,7 +42,7 @@
                 <path d="M10 14L21 3" stroke="#2874A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </a>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="help-icon" data-tooltip="Deze lijst toont alle afspraken van het appel." style="cursor: pointer; margin-left: 10px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="help-icon" data-tooltip="Sneltoetsen:&#10;• Dubbelklik op een rij om te bewerken&#10;• Enter: Open geselecteerde afspraak&#10;• Delete: Verwijder geselecteerde afspraak&#10;• Esc: Sluit vensters" style="cursor: pointer; margin-left: 10px;">
             <circle cx="12" cy="12" r="10" stroke="#2874A6" stroke-width="2" fill="none"/>
             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" stroke="#2874A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <circle cx="12" cy="17" r="0.5" fill="#2874A6" stroke="#2874A6" stroke-width="1.5"/>
@@ -116,7 +116,14 @@
 
             <!-- Quill: Uitleg -->
             <div class="editor-controls">
-                <label for="quillUitleg">Uitleg</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <label for="quillUitleg" style="margin:0;">Uitleg</label>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="help-icon" data-tooltip="Editor Sneltoetsen:&#10;• Ctrl+B: Vetgedrukt&#10;• Ctrl+I: Cursief&#10;• Ctrl+U: Onderstrepen&#10;• Enter: Nieuwe regel&#10;• Shift+Enter: Nieuwe alinea" style="cursor: pointer;">
+                        <circle cx="12" cy="12" r="10" stroke="#999" stroke-width="2" fill="none"/>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="12" cy="17" r="0.5" fill="#999" stroke="#999" stroke-width="1.5"/>
+                    </svg>
+                </div>
                 <div class="editor-buttons">
                     <button type="button" class="btn-icon" id="togglePreview" title="Voorbeeld weergave">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

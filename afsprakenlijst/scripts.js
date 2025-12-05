@@ -862,5 +862,29 @@ function initEditorResize() {
             document.body.style.cursor = "default";
         }
     });
+
+    // Tooltip handler
+    document.body.addEventListener('mouseover', function(e) {
+        const target = e.target.closest('.help-icon');
+        if (target) {
+            const tooltip = document.getElementById('tooltip-info');
+            const text = target.getAttribute('data-tooltip');
+            if (text) {
+                tooltip.innerText = text;
+                tooltip.style.display = 'block';
+                
+                const rect = target.getBoundingClientRect();
+                tooltip.style.left = (rect.left + window.scrollX + 20) + 'px';
+                tooltip.style.top = (rect.top + window.scrollY) + 'px';
+            }
+        }
+    });
+
+    document.body.addEventListener('mouseout', function(e) {
+        const target = e.target.closest('.help-icon');
+        if (target) {
+            document.getElementById('tooltip-info').style.display = 'none';
+        }
+    });
 }
 
