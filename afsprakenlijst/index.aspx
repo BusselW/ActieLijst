@@ -166,6 +166,28 @@
             <div id="quillUitleg" class="quill-editor-resizable" style="height: 500px;"></div>
             <div class="resize-handle" id="editorResizeHandle"></div>
             
+            <!-- Attachments Section -->
+            <div class="attachments-section">
+                <label>Bijlagen</label>
+                
+                <div id="attachmentWarning" class="validation-warning" style="display:none; margin-bottom:10px;">
+                    Sla de afspraak eerst op om bijlagen toe te voegen.
+                </div>
+
+                <div id="attachmentContainer" style="display:none;">
+                    <div id="dropZone" class="drop-zone">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2874A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p>Sleep bestanden hierheen of <span class="browse-link">klik om te bladeren</span></p>
+                        <input type="file" id="fileInput" style="display:none" multiple>
+                    </div>
+                    <ul id="attachmentList" class="attachment-list"></ul>
+                </div>
+            </div>
+
             <!-- Preview area -->
             <div id="previewArea" class="preview-area" style="display:none;">
                 <h4>Voorbeeld:</h4>

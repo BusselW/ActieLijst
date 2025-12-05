@@ -250,9 +250,150 @@ document.addEventListener("DOMContentLoaded", function() {
     // 18) Editor resize handle
     initEditorResize();
 
+    // 19) Attachments
+    initAttachments();
+
     // Data inladen
     loadData();
 });
+
+/************************************************
+ * Attachments Logic
+ ************************************************/
+function initAttachments() {
+    const dropZone = document.getElementById("dropZone");
+    const fileInput = document.getElementById("fileInput");
+
+    // Click to browse
+    dropZone.addEventListener("click", () => fileInput.click());
+
+    // File input change
+    fileInput.addEventListener("change", (e) => {
+        if (e.target.files.length > 0) {
+            handleFiles(e.target.files);
+        }
+    });
+
+    // Drag & Drop events
+    dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.classList.add("drag-over");
+    });
+
+    dropZone.addEventListener("dragleave", () => {
+        dropZone.classList.remove("drag-over");
+    });
+
+    dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("drag-over");
+        if (e.dataTransfer.files.length > 0) {
+            handleFiles(e.dataTransfer.files);
+        }
+    });
+}
+
+async function handleFiles(files) {
+    const editId = document.getElementById("editId").value;
+    if (!editId) {
+        showNotification("Sla de afspraak eerst op.", "error");
+        return;
+    }
+
+    for (let i = 0; i < files.length; i++) {
+        await uploadAttachment(editId, files[i]);
+    }
+    await loadAttachments(editId);
+}
+
+async function loadAttachments(itemId) {
+    const list = document.getElementById("attachmentList");
+    list.innerHTML = '<li style="padding:10px; color:#666;">Laden...</li>';
+
+    try {
+        const url = `${SITE_URL}/_api/web/lists(guid'${LIST_GUID}')/items(${itemId})/AttachmentFiles`;
+        const resp = await apiCallWithDigest(url, { method: "GET" });
+        const data = await resp.json();
+        const attachments = data.d.results || [];
+
+        list.innerHTML = "";
+        if (attachments.length === 0) {
+            // list.innerHTML = '<li style="padding:10px; color:#999; font-style:italic;">Geen bijlagen</li>';
+            return;
+        }
+
+        attachments.forEach(att => {
+            const li = document.createElement("li");
+            li.className = "attachment-item";
+            
+            // File icon based on extension (simple version)
+            const ext = att.FileName.split('.').pop().toLowerCase();
+            let icon = "📄";
+            if (['jpg','jpeg','png','gif'].includes(ext)) icon = "🖼️";
+            if (['pdf'].includes(ext)) icon = "📕";
+            if (['doc','docx'].includes(ext)) icon = "📘";
+            if (['xls','xlsx'].includes(ext)) icon = "📗";
+
+            li.innerHTML = `
+                <a href="${att.ServerRelativeUrl}" target="_blank" class="attachment-link" download>
+                    <span style="font-size:18px;">${icon}</span>
+                    <span>${att.FileName}</span>
+                </a>
+                <button type="button" class="delete-attachment" title="Verwijderen" onclick="deleteAttachment(${itemId}, '${att.FileName}')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                </button>
+            `;
+            list.appendChild(li);
+        });
+    } catch (err) {
+        console.error("Fout bij laden bijlagen:", err);
+        list.innerHTML = '<li style="color:red;">Fout bij laden bijlagen</li>';
+    }
+}
+
+async function uploadAttachment(itemId, file) {
+    try {
+        // Read file as ArrayBuffer
+        const buffer = await file.arrayBuffer();
+        
+        const fileName = encodeURIComponent(file.name);
+        const url = `${SITE_URL}/_api/web/lists(guid'${LIST_GUID}')/items(${itemId})/AttachmentFiles/add(FileName='${fileName}')`;
+
+        await apiCallWithDigest(url, {
+            method: "POST",
+            body: buffer,
+            processData: false // Important for binary data if using jQuery, but here we use fetch so body is enough
+        });
+
+        showNotification(`Bijlage '${file.name}' geüpload.`, "success");
+    } catch (err) {
+        console.error("Upload error:", err);
+        showNotification(`Fout bij uploaden '${file.name}': ${err.message}`, "error");
+    }
+}
+
+// Make global so onclick works
+window.deleteAttachment = async function(itemId, fileName) {
+    if (!confirm(`Weet je zeker dat je '${fileName}' wilt verwijderen?`)) return;
+
+    try {
+        const url = `${SITE_URL}/_api/web/lists(guid'${LIST_GUID}')/items(${itemId})/AttachmentFiles('${encodeURIComponent(fileName)}')`;
+        await apiCallWithDigest(url, {
+            method: "POST",
+            headers: {
+                "X-HTTP-Method": "DELETE"
+            }
+        });
+        showNotification("Bijlage verwijderd.", "success");
+        await loadAttachments(itemId);
+    } catch (err) {
+        console.error("Delete error:", err);
+        showNotification("Fout bij verwijderen bijlage.", "error");
+    }
+};
 
 /************************************************
  * Data ophalen en tabel renderen
@@ -385,6 +526,12 @@ function openAddModal() {
     document.getElementById("editTitle").classList.remove("input-error");
     
     openModal("editModal");
+    
+    // Attachments UI state for new item
+    document.getElementById("attachmentContainer").style.display = "none";
+    document.getElementById("attachmentWarning").style.display = "block";
+    document.getElementById("attachmentList").innerHTML = "";
+
     setInitialFormState();
     setTimeout(() => document.getElementById("editTitle").focus(), 100);
 }
@@ -415,6 +562,12 @@ async function openEditModal() {
     document.getElementById("editTitle").classList.remove("input-error");
 
     openModal("editModal");
+    
+    // Attachments UI state for existing item
+    document.getElementById("attachmentContainer").style.display = "block";
+    document.getElementById("attachmentWarning").style.display = "none";
+    loadAttachments(item.ID);
+
     setInitialFormState();
     setTimeout(() => document.getElementById("editTitle").focus(), 100);
 }
