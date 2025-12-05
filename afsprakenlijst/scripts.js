@@ -196,6 +196,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const cancelButton = document.getElementById("cancelButton");
     if (cancelButton) {
         cancelButton.addEventListener("click", () => {
+            console.log("Cancel clicked. Form has changes:", formHasChanges);
             if (formHasChanges) {
                 if (confirm("Je hebt niet-opgeslagen wijzigingen. Weet je zeker dat je wilt annuleren?")) {
                     if (typeof clearDraft === 'function') clearDraft();
@@ -808,18 +809,24 @@ function clearDraft() {
 function togglePreview() {
     const previewArea = document.getElementById("previewArea");
     const previewContent = document.getElementById("previewContent");
-    const quillContainer = document.getElementById("quillUitleg").parentElement;
+    const quillEditor = document.getElementById("quillUitleg");
+    const quillToolbar = document.getElementById("quillToolbar");
+    const resizeHandle = document.getElementById("editorResizeHandle");
     
     if (previewArea.style.display === "none") {
         // Show preview
         previewContent.innerHTML = sanitizeAndFormatHTML(quillUitleg.root.innerHTML);
         previewArea.style.display = "block";
-        quillContainer.style.display = "none";
+        quillEditor.style.display = "none";
+        if (quillToolbar) quillToolbar.style.display = "none";
+        if (resizeHandle) resizeHandle.style.display = "none";
         document.getElementById("togglePreview").classList.add("active");
     } else {
         // Hide preview
         previewArea.style.display = "none";
-        quillContainer.style.display = "block";
+        quillEditor.style.display = "block";
+        if (quillToolbar) quillToolbar.style.display = "block";
+        if (resizeHandle) resizeHandle.style.display = "block";
         document.getElementById("togglePreview").classList.remove("active");
     }
 }

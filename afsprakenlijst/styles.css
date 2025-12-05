@@ -531,18 +531,31 @@ h1 {
 }
 
 .btn-icon {
-    background: #f0f0f0;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 6px 12px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px 10px;
     cursor: pointer;
-    font-size: 18px;
-    transition: all 0.2s;
+    font-size: 16px;
+    line-height: 1;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
 }
 
 .btn-icon:hover {
-    background: #e0e0e0;
-    transform: scale(1.05);
+    background: #f0f0f0;
+    border-color: #bbb;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-icon:active {
+    transform: translateY(0);
+    box-shadow: none;
 }
 
 .btn-icon.active {
@@ -553,6 +566,7 @@ h1 {
 
 .btn-icon span {
     display: inline-block;
+    pointer-events: none; /* Ensure click hits button */
 }
 
 /* Unsaved changes indicator */
