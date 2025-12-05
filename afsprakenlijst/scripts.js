@@ -161,21 +161,16 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // 10) Klik buiten modal om te sluiten
+    // 10) Klik buiten modal om te sluiten - UITGESCHAKELD op verzoek
     document.getElementById("editModal").addEventListener("click", (e) => {
         if (e.target.id === "editModal") {
-            if (formHasChanges) {
-                if (confirm("Je hebt niet-opgeslagen wijzigingen. Weet je zeker dat je wilt sluiten?")) {
-                    closeModal("editModal");
-                }
-            } else {
-                closeModal("editModal");
-            }
+            // Do nothing, user must use Cancel or ESC
+            // if (formHasChanges) { ... }
         }
     });
     document.getElementById("deleteModal").addEventListener("click", (e) => {
         if (e.target.id === "deleteModal") {
-            closeModal("deleteModal");
+            // Do nothing
         }
     });
 
@@ -845,6 +840,11 @@ function initEditorResize() {
         isResizing = true;
         startY = e.clientY;
         startHeight = editor.offsetHeight;
+        
+        // Disable flex so manual height works
+        editor.style.flex = "none";
+        editor.style.height = startHeight + "px";
+        
         document.body.style.cursor = "ns-resize";
         e.preventDefault();
     });
