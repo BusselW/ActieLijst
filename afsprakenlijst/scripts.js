@@ -201,17 +201,20 @@ document.addEventListener("DOMContentLoaded", function() {
     // Will be set up after Quill initialization
 
     // 14) Cancel button with unsaved check
-    document.getElementById("cancelButton").addEventListener("click", () => {
-        if (formHasChanges) {
-            if (confirm("Je hebt niet-opgeslagen wijzigingen. Weet je zeker dat je wilt annuleren?")) {
-                clearDraft();
+    const cancelButton = document.getElementById("cancelButton");
+    if (cancelButton) {
+        cancelButton.addEventListener("click", () => {
+            if (formHasChanges) {
+                if (confirm("Je hebt niet-opgeslagen wijzigingen. Weet je zeker dat je wilt annuleren?")) {
+                    if (typeof clearDraft === 'function') clearDraft();
+                    closeModal("editModal");
+                }
+            } else {
+                if (typeof clearDraft === 'function') clearDraft();
                 closeModal("editModal");
             }
-        } else {
-            clearDraft();
-            closeModal("editModal");
-        }
-    });
+        });
+    }
 
     // 15) Preview toggle
     const togglePreviewBtn = document.getElementById("togglePreview");
