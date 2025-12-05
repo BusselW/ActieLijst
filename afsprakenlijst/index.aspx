@@ -12,22 +12,22 @@
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
         
     <!-- Onze Stylesheet -->
-    <link rel="stylesheet" href="https://som.org.om.local/sites/MulderT/Onderdelen/ZVAppel/ZV/CPW/Lijst/styles.css">
+    <link rel="stylesheet" href="styles.css">
     
     <!-- jQuery (optioneel, voor gemak) -->
-    <script src="https://som.org.om.local/sites/MulderT/SBeheer/CPW/L/jquery3.6.0.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <!-- Quill JS -->
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 
     <!-- PostCall.js: bevat apiCallWithDigest() -->
-    <script src="https://som.org.om.local/sites/MulderT/Onderdelen/ZVAppel/ZV/CPW/Lijst/PostCall.js"></script>
+    <script src="PostCall.js"></script>
 
     <!-- Onze scripts -->
-    <script src="https://som.org.om.local/sites/MulderT/Onderdelen/ZVAppel/ZV/CPW/Lijst/scripts.js"></script>
+    <script src="scripts.js"></script>
     
     <!-- Tour guide -->
-    <script src="https://som.org.om.local/sites/MulderT/Onderdelen/ZVAppel/ZV/CPW/Lijst/tour.js"></script>
+    <script src="tour.js"></script>
 </head>
 <body>
     <h1>
